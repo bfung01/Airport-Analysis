@@ -1,4 +1,4 @@
-#####Airflow ETL DAG for Flight Departure Data
+<span style="font-size:larger;">>Airflow ETL DAG for Flight Departure Data</span
 This repository contains an Apache Airflow Directed Acyclic Graph (DAG) designed to automate the extraction, transformation, and loading (ETL) of flight departure data from the Airlabs API into an AWS S3 bucket. The workflow is hosted on an Amazon EC2 instance.
 
 Repository Structure
