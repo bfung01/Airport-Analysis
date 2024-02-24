@@ -8,8 +8,6 @@ import pandas as pd
 from datetime import datetime
 import calendar
 
-# username: admin
-# password: NgG76hHUbCpsZDfr
 def transform_load_data(task_instance):
     data = task_instance.xcom_pull(task_ids="extract_departure_data")
     departures = data['response']
@@ -53,13 +51,13 @@ def transform_load_data(task_instance):
                             }
         rows.append(transformed_data)
     new_data = pd.DataFrame(rows)
-    existing_data = pd.read_csv("s3://departuresairflowbucket-yml/departures.csv")
+    existing_data = pd.read_csv("BUCKET_PATH")
 
     complement = pd.concat([existing_data, new_data], ignore_index=True)
     complement.drop_duplicates(inplace=True, keep=False)
     complement.dropna(inplace=True)
     complement.sort_values(by=['Year', 'Month', 'Day', 'Departure Time'], ascending = [True, True, True, True], inplace = True)
-    complement.to_csv("s3://departuresairflowbucket-yml/departures.csv", index=False)
+    complement.to_csv("BUCKET_PATH", index=False)
 
 
 
@@ -85,13 +83,13 @@ with DAG('departures_dag',
         is_departure_api_ready = HttpSensor(
         task_id ='is_departure_api_ready',
         http_conn_id='departure_api',
-        endpoint='/api/v9/schedules/?api_key=10f71ab4-89c5-458c-9857-5d3edf168bd8&dep_iata=JFK&_fields=dep_iata,dep_terminal,airline_iata,flight_iata,dep_time,dep_delayed,arr_iata,arr_time,duration'
+        endpoint='/api/v9/schedules/?api_key=YOUR_API_KEY&dep_iata=JFK&_fields=dep_iata,dep_terminal,airline_iata,flight_iata,dep_time,dep_delayed,arr_iata,arr_time,duration'
     )
 
         extract_departure_data = SimpleHttpOperator(
         task_id = 'extract_departure_data',
         http_conn_id = 'departure_api',
-        endpoint='/api/v9/schedules/?api_key=10f71ab4-89c5-458c-9857-5d3edf168bd8&dep_iata=JFK&_fields=dep_iata,dep_terminal,airline_iata,flight_iata,dep_time,dep_delayed,arr_iata,arr_time,duration',
+        endpoint='/api/v9/schedules/?api_key=YOUR_API_KEY&dep_iata=JFK&_fields=dep_iata,dep_terminal,airline_iata,flight_iata,dep_time,dep_delayed,arr_iata,arr_time,duration',
         method = 'GET',
         response_filter= lambda x: json.loads(x.text),
         log_response=True
