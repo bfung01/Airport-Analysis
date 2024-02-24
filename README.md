@@ -5,7 +5,7 @@ This repository contains an Apache Airflow Directed Acyclic Graph (DAG) designed
 ### /dag: Contains the Airflow DAG file that defines the ETL process.
 - DAG File: departures_dag.py
 ### /analysis: Contains the analysis file 
-- Python File: airport_analysis.py
+- Python File: departures_analysis.py
 This DAG, named departures_dag, is scheduled to run hourly and is designed to perform the following tasks:
 
 Check Airlabs API Availability: Utilizes an HttpSensor to ensure the Airlabs departure API is reachable before proceeding with data extraction.
